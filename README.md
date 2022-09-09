@@ -29,13 +29,12 @@ Google C++ Style Guide
     ** no viable conversion from 
     std::unique_ptr<bustub::RowMatrix<int> : temp 
     const RowMatrix<T> * : temp.get()
-
+    
+    Consider replacing 'unsigned long' with 'uint64' uint64_t
+    C-style casts are discouraged; use static_cast/const_cast/reinterpret_cast
     Convert one int ->int64_t
     const uint64_t size = (static_cast<uint64_t>(rows_) * cols_)
-
-    Consider replacing 'unsigned long' with 'uint64' uint64_t
-
-    C-style casts are discouraged; use static_cast/const_cast/reinterpret_cast
+    
 
 ![Check-clang-tidy](bustub/submission/Photo/check-clang-tidy.png)
 ![Pr0](bustub/submission/Photo/Project0_1.png)
