@@ -1,19 +1,24 @@
 # CMU15-445_Database_Project
  Database Design Project (C++)
  Course Link:
+
  https://15445.courses.cs.cmu.edu/fall2021/assignments.html
 
+ Project Link:
+
+ https://github.com/cmu-db/bustub
+
 ## Environment
-Mac & Linux_Ubuntu (VMWARE)
+Mac & Linux_Ubuntu (VMware)
 
 ## Tools
-CMake, Google C++ Style Guide, Unit Testing
+CMake, Google C++ Style Guide, Unit Testing, etc
 
 ## Project 0
 ![Pr0](bustub/submission/Photo/Project0_GS.png)
 
-Keypoint used in C++:
-Template -- template <typename T>
+Keypoint used in C++:\
+Template -- template <typename T>\
 Exception
 
 How to create m*n arrays [the 2nd way-inherit]
