@@ -11,17 +11,17 @@
 //===----------------------------------------------------------------------===//
 
 #pragma once
-
+#include <unistd.h>
+#include <cstdio>
 #include <list>
 #include <mutex>  // NOLINT
 #include <unordered_map>
-
 #include "buffer/buffer_pool_manager.h"
 #include "buffer/lru_replacer.h"
+#include "common/logger.h"
 #include "recovery/log_manager.h"
 #include "storage/disk/disk_manager.h"
 #include "storage/page/page.h"
-
 namespace bustub {
 
 /**
@@ -113,7 +113,6 @@ class BufferPoolManagerInstance : public BufferPoolManager {
   void DeallocatePage(__attribute__((unused)) page_id_t page_id) {
     // This is a no-nop right now without a more complex data structure to track deallocated pages
     page_table_.erase(page_id);
-
     free_list_.push_back(page_id);
   }
 

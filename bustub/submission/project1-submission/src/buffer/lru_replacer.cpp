@@ -54,7 +54,7 @@ void LRUReplacer::Unpin(frame_id_t frame_id) {
     latch_.unlock();
     return;
   }
-  LOG_DEBUG("unpin:%d", frame_id);
+  // LOG_DEBUG("unpin:%d", frame_id);
   lru_.emplace(frame_id, 0);
   victimize_list_.push_back(frame_id);
   latch_.unlock();
