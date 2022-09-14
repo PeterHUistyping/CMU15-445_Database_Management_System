@@ -38,7 +38,7 @@ BufferPoolManagerInstance::BufferPoolManagerInstance(size_t pool_size, uint32_t 
 
   // Initially, every page is in the free list.
   for (size_t i = 0; i < pool_size_; ++i) {
-    free_list_.emplace_back(static_cast<int>(i));  // Construct and insert element
+    free_list_.emplace_back(static_cast<int>(i));
   }
 }
 
@@ -49,127 +49,43 @@ BufferPoolManagerInstance::~BufferPoolManagerInstance() {
 
 auto BufferPoolManagerInstance::FlushPgImp(page_id_t page_id) -> bool {
   // Make sure you call DiskManager::WritePage!
-  latch_.lock();
-  if (page_table_.find(page_id) != page_table_.end()) {
-    frame_id_t frame_id = page_table_.find(page_id)->second;
-    disk_manager_->WritePage(page_id, pages_[frame_id].GetData());
-    latch_.unlock();
-    return true;
-  }
   return false;
-  latch_.unlock();
 }
 
 void BufferPoolManagerInstance::FlushAllPgsImp() {
   // You can do it!
-  // const unordered_map<page_id_t, frame_id_t>
-  for (auto &page_id_temp : page_table_) {
-    FlushPgImp(page_id_temp.first);
-  }
 }
 
 auto BufferPoolManagerInstance::NewPgImp(page_id_t *page_id) -> Page * {
   // 0.   Make sure you call AllocatePage!
   // 1.   If all the pages in the buffer pool are pinned, return nullptr.
-  size_t i;
-  for (i = 0; i < pool_size_; i++) {
-    if (pages_[i].GetPinCount() == 0) {
-      break;
-    }
-  }
-  if (i == pool_size_) {
-    return nullptr;
-  }
   // 2.   Pick a victim page P from either the free list or the replacer. Always pick from the free list first.
-  frame_id_t frame_id;
-  if (!free_list_.empty()) {
-    frame_id = free_list_.front();
-    free_list_.pop_front();
-  } else {
-    if (replacer_->Victim(&frame_id) == false) {
-      return nullptr;
-    }
-  }
-  // TODO replacer;
-  //  3.   Update P's metadata, zero out memory and add P to the page table.
-  //  4.   Set the page ID output parameter. Return a pointer to P.
-  pages_[frame_id].SetLSN(log_manager_->GetPersistentLSN());
-  page_table_.emplace(*page_id, frame_id);  // pointer
-  return &pages_[frame_id];
+  // 3.   Update P's metadata, zero out memory and add P to the page table.
+  // 4.   Set the page ID output parameter. Return a pointer to P.
+  return nullptr;
 }
 
 auto BufferPoolManagerInstance::FetchPgImp(page_id_t page_id) -> Page * {
   // 1.     Search the page table for the requested page (P).
   // 1.1    If P exists, pin it and return it immediately.
-  latch_.lock();
-  if (page_table_.find(page_id) != page_table_.end()) {
-    latch_.unlock();
-    frame_id_t frame_id = page_table_.find(page_id)->second;
-    replacer_->Pin(frame_id);
-    return &pages_[frame_id];
-  }
   // 1.2    If P does not exist, find a replacement page (R) from either the free list or the replacer.
   //        Note that pages are always found from the free list first.
-  frame_id_t frame_id;
-  if (!free_list_.empty()) {
-    frame_id = free_list_.front();
-    free_list_.pop_front();
-  } else {  // 2.     If R is dirty, write it back to the disk.
-            // 3.     Delete R from the page table and insert P.
-    if (replacer_->Victim(&frame_id) == false) {
-      return nullptr;
-    }
-    page_id_t page_id_old = 0;
-    for (auto iter = page_table_.begin(); iter != page_table_.end(); ++iter) {
-      if (iter->second == frame_id) {
-        page_id_old = iter->first;
-        break;
-      }
-    }
-    if (pages_[frame_id].IsDirty()) {
-      FlushPgImp(page_id_old);
-    }
-    if (DeletePage(page_id_old) == false) {
-      return nullptr;
-    }
-    // 4.     Update P's metadata, read in the page content from disk, and then return a pointer to P.
-  }
-  replacer_->Pin(frame_id);
-  return NewPgImp(&page_id);
+  // 2.     If R is dirty, write it back to the disk.
+  // 3.     Delete R from the page table and insert P.
+  // 4.     Update P's metadata, read in the page content from disk, and then return a pointer to P.
+  return nullptr;
 }
 
 auto BufferPoolManagerInstance::DeletePgImp(page_id_t page_id) -> bool {
   // 0.   Make sure you call DeallocatePage!
   // 1.   Search the page table for the requested page (P).
   // 1.   If P does not exist, return true.
-  latch_.lock();
-  if (page_table_.find(page_id) == page_table_.end()) {
-    latch_.unlock();
-    return true;
-  }
-  frame_id_t frame_id = page_table_.find(page_id)->second;
   // 2.   If P exists, but has a non-zero pin-count, return false. Someone is using the page.
-  if (pages_[frame_id].GetPinCount() != 0) {
-    return false;
-  }
-  // 3.   Otherwise, P can be deleted. Remove P from the page table, reset its metadata and return it to the free
-  // list.
-
-  // TODO:reset its metadata
-  DeallocatePage(page_id);
-  return true;
+  // 3.   Otherwise, P can be deleted. Remove P from the page table, reset its metadata and return it to the free list.
+  return false;
 }
 
-auto BufferPoolManagerInstance::UnpinPgImp(page_id_t page_id, bool is_dirty) -> bool {
-  if (pages_[page_table_[page_id]].GetPinCount() <= 0) {
-    return false;
-  }
-  if (is_dirty) {
-    FlushPage(page_id);
-  }
-  replacer_->Unpin(page_table_[page_id]);
-  return true;
-}
+auto BufferPoolManagerInstance::UnpinPgImp(page_id_t page_id, bool is_dirty) -> bool { return false; }
 
 auto BufferPoolManagerInstance::AllocatePage() -> page_id_t {
   const page_id_t next_page_id = next_page_id_;
