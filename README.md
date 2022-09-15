@@ -29,11 +29,13 @@ Get the path for testing on Gradescope using getcwd().
     #include < direct.h >;   (Windows)
     #include < unistd.h >;   (Linux/Mac)
     int MAX_PATH = 10000;
-    char buffer[MAX_PATH];
+    char buffer[ MAX_PATH ];
     std::cout << getcwd(buffer, MAX_PATH);  
 
-## Debug(to be done)
-codelldb:  
+## Debug 
+"common/logger.h"  
+or
+codelldb:(to be done)  
 On launch.json:  "program": "${workspaceFolder}/build/test/starter_test",  
     {
         // Use IntelliSense to learn about possible attributes.
@@ -55,7 +57,7 @@ On launch.json:  "program": "${workspaceFolder}/build/test/starter_test",
 ![Pr0](bustub/submission/Photo/Project0_GS.png)  
 
 Keypoint used in C++:  
-Template -- template <typename T>  
+Template -- template < typename T >  
 Exception  
 
 How to create m*n arrays [the 2nd way-inherit]  
@@ -75,4 +77,7 @@ Google C++ Style Guide
 
 ![Check-clang-tidy](bustub/submission/Photo/check-clang-tidy.png)  
 ![Pr0](bustub/submission/Photo/Project0_1.png)
- 
+
+## Project 1
+![Pr1_Gradescope](bustub/submission/Photo/Project1_GS.png)  
+![Pr1](bustub/submission/Photo/Project1.png)

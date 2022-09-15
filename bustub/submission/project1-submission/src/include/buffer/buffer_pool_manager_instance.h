@@ -113,7 +113,6 @@ class BufferPoolManagerInstance : public BufferPoolManager {
   void DeallocatePage(__attribute__((unused)) page_id_t page_id) {
     // This is a no-nop right now without a more complex data structure to track deallocated pages
     page_table_.erase(page_id);
-    free_list_.push_back(page_id);
   }
 
   /**

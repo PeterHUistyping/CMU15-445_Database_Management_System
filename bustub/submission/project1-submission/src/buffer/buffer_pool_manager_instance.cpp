@@ -11,7 +11,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "buffer/buffer_pool_manager_instance.h"
-
 #include "common/macros.h"
 
 namespace bustub {
@@ -130,6 +129,8 @@ auto BufferPoolManagerInstance::NewPgImp(page_id_t *page_id) -> Page * {
   //  4.   Set the page ID output parameter. Return a pointer to P.
   // page_table_[*page_id] = frame_id;
   pages_[frame_id].ResetMemory();
+  // LOG_INFO("Assert failed info: NEWPAGE ;frame %d", frame_id);
+  // assert((const uint32_t)frame_id < pool_size_);
   pages_[frame_id].pin_count_ = 1;
   pages_[frame_id].page_id_ = *page_id;
   replacer_->Pin(frame_id);
@@ -156,7 +157,9 @@ auto BufferPoolManagerInstance::FetchPgImp(page_id_t page_id) -> Page * {
   if (!free_list_.empty()) {
     frame_id = free_list_.front();
     free_list_.pop_front();
-    // LOG_INFO("FetchPgImp:free list,left %lu", free_list_.size());
+    // LOG_INFO("Assert failed info: FETCHPAGE ;frame %d", frame_id);
+    // assert((const uint32_t)frame_id < pool_size_);
+    //  LOG_INFO("FetchPgImp:free list,left %lu", free_list_.size());
   } else {
     if (!replacer_->Victim(&frame_id)) {
       //   LOG_INFO("FetchPgImp:Replacer");
@@ -189,6 +192,8 @@ auto BufferPoolManagerInstance::FetchPgImp(page_id_t page_id) -> Page * {
   Page *newpage = &pages_[frame_id];
   newpage->ResetMemory();
   page_table_[page_id] = frame_id;
+  // LOG_INFO("Assert failed info: FETCHPAGE ;frame %d", frame_id);
+  // assert((const uint32_t)frame_id < pool_size_);
   disk_manager_->ReadPage(page_id, newpage->data_);
   newpage->is_dirty_ = false;
   newpage->pin_count_ = 1;
@@ -225,6 +230,7 @@ auto BufferPoolManagerInstance::DeletePgImp(page_id_t page_id) -> bool {
   //  LOG_DEBUG("Deleting page%d,with %s", page_id, pages_[frame_id].data_);
   // reset its metadata
   DeallocatePage(page_id);
+  free_list_.push_back(frame_id);
   pages_[frame_id].pin_count_ = 0;
   pages_[frame_id].page_id_ = INVALID_PAGE_ID;
   return true;
