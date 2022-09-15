@@ -16,6 +16,7 @@ Class DiskManager(Responsible for writing page from BPM to Disk)
 
 Print out the test file to get the whole Gradescope test file!  
     /*Gradescope Test output*/  
+    
     FILE *out;
     out = fopen("/autograder/bustub/test/buffer/grading_..._test.cpp", "r");  
     // out = fopen("../test/buffer/..._test.cpp", "r");  
@@ -36,6 +37,13 @@ latch_.lock();
 std::lock_guard< std::mutex > lock(latch_); //better as unlock automatically in Deconstructor  
 
 Avoid calling another function with latch (interlock)  
+
+ConcurrencyTest  
+std::vector< std::thread > threads;  
+std::shared_ptr< BufferPoolManagerInstance > bpm( )  
+threads.push_back(std::thread([ &bpm ]( ){  
+
+
 ==5570==ERROR: AddressSanitizer: heap-use-after-free on address 0x000107101a90 at pc 0x000102bca6d0 bp 0x00016d8325b0 sp 0x00016d8325a8  
 
     // frame_id = &(victimize_list_.front());  

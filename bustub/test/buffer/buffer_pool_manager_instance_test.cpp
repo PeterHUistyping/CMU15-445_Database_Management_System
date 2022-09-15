@@ -500,18 +500,20 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_IsDirty) {
   delete disk_manager;
 }
 //
-TEST(BufferPoolManagerInstanceTest, ConcurrencyTest) {
+TEST(BufferPoolManagerInstanceTest, DISABLED_ConcurrencyTest) {
   const int num_threads = 5;
   const int num_runs = 50;
   for (int run = 0; run < num_runs; run++) {
     DiskManager *disk_manager = new DiskManager("test.db");
     std::shared_ptr<BufferPoolManagerInstance> bpm{new BufferPoolManagerInstance(50, disk_manager)};
     std::vector<std::thread> threads;
-
-    for (int tid = 0; tid < n um_threads; tid++) {
+    int tid, i = 0;
+    for (tid = 0; tid < num_threads; tid++) {
+      i++;
       threads.push_back(std::thread([&bpm]() {  // NOLINT
         page_id_t temp_page_id;
         std::vector<page_id_t> page_ids;
+
         for (int i = 0; i < 10; i++) {
           auto new_page = bpm->NewPage(&temp_page_id, nullptr);
           EXPECT_NE(nullptr, new_page);
@@ -519,9 +521,11 @@ TEST(BufferPoolManagerInstanceTest, ConcurrencyTest) {
           strcpy(new_page->GetData(), std::to_string(temp_page_id).c_str());  // NOLINT
           page_ids.push_back(temp_page_id);
         }
+
         for (int i = 0; i < 10; i++) {
           EXPECT_EQ(1, bpm->UnpinPage(page_ids[i], true, nullptr));
         }
+
         for (int j = 0; j < 10; j++) {
           auto page = bpm->FetchPage(page_ids[j], nullptr);
           EXPECT_NE(nullptr, page);
@@ -529,6 +533,7 @@ TEST(BufferPoolManagerInstanceTest, ConcurrencyTest) {
           EXPECT_EQ(0, std::strcmp(std::to_string(page_ids[j]).c_str(), (page->GetData())));
           EXPECT_EQ(1, bpm->UnpinPage(page_ids[j], true, nullptr));
         }
+
         for (int j = 0; j < 10; j++) {
           EXPECT_EQ(1, bpm->DeletePage(page_ids[j], nullptr));
         }
@@ -581,7 +586,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_IntegratedTest) {
   delete disk_manager;
 }
 
-TEST(BufferPoolManagerInstanceTest, DISABLED_HardTest_1) {
+TEST(BufferPoolManagerInstanceTest, HardTest_1) {
   page_id_t temp_page_id;
   DiskManager *disk_manager = new DiskManager("test.db");
   auto bpm = new BufferPoolManagerInstance(10, disk_manager);
@@ -602,7 +607,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_HardTest_1) {
       EXPECT_EQ(1, bpm->UnpinPage(page_ids[i], true));
     }
   }
-
+  LOG_DEBUG("1------------------------------");
   for (int j = 0; j < 10000; j++) {
     auto page = bpm->FetchPage(page_ids[j]);
     EXPECT_NE(nullptr, page);
@@ -614,7 +619,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_HardTest_1) {
     }
     EXPECT_EQ(1, bpm->UnpinPage(page_ids[j], true));
   }
-
+  LOG_DEBUG("2------------------------------");
   auto rng = std::default_random_engine{};
   std::shuffle(page_ids.begin(), page_ids.end(), rng);
 
@@ -625,7 +630,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_HardTest_1) {
     EXPECT_EQ(1, bpm->UnpinPage(page_ids[j], false));
     EXPECT_EQ(1, bpm->DeletePage(page_ids[j]));
   }
-
+  LOG_DEBUG("3------------------------------");
   for (int j = 5000; j < 10000; j++) {
     auto page = bpm->FetchPage(page_ids[j]);
     EXPECT_NE(nullptr, page);

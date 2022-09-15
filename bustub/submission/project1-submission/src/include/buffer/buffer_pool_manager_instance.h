@@ -11,8 +11,8 @@
 //===----------------------------------------------------------------------===//
 
 #pragma once
-
 #include <unistd.h>
+#include <cstdio>
 #include <list>
 #include <mutex>  // NOLINT
 #include <unordered_map>

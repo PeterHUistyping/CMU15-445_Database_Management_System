@@ -16,16 +16,6 @@ namespace bustub {
 
 ParallelBufferPoolManager::ParallelBufferPoolManager(size_t num_instances, size_t pool_size, DiskManager *disk_manager,
                                                      LogManager *log_manager) {
-  FILE *out;
-  out = fopen("/autograder/bustub/test/buffer/grading_parallel_buffer_pool_manager_test.cpp", "r");
-  char ch;
-  /*for (int i = 0; i <= 5000; i++) {
-    ch = getc(out);
-  }*/
-  while ((ch = getc(out)) != EOF) {
-    putchar(ch);
-  }
-  fclose(out);
   // Allocate and create individual BufferPoolManagerInstances
 }
 
