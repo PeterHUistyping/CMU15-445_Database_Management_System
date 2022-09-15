@@ -21,6 +21,7 @@ namespace bustub {
 
 // NOLINTNEXTLINE
 // Check whether pages containing terminal characters can be recovered
+
 TEST(BufferPoolManagerInstanceTest, BinaryDataTest) {
   const std::string db_name = "test.db";
   const size_t buffer_pool_size = 10;
@@ -62,18 +63,23 @@ TEST(BufferPoolManagerInstanceTest, BinaryDataTest) {
   for (size_t i = buffer_pool_size; i < buffer_pool_size * 2; ++i) {
     EXPECT_EQ(nullptr, bpm->NewPage(&page_id_temp));
   }
-
-  // Scenario: After unpinning pages {0, 1, 2, 3, 4} we should be able to create 5 new pages
+  // LOG_INFO("-------------------------------");
+  //  Scenario: After unpinning pages {0, 1, 2, 3, 4} we should be able to create 5 new pages
   for (int i = 0; i < 5; ++i) {
     EXPECT_EQ(true, bpm->UnpinPage(i, true));
     bpm->FlushPage(i);
   }
+  // page0 = bpm->FetchPage(0);
+  // EXPECT_EQ(0, memcmp(page0->GetData(), random_binary_data, PAGE_SIZE));
+
   for (int i = 0; i < 5; ++i) {
     EXPECT_NE(nullptr, bpm->NewPage(&page_id_temp));
     bpm->UnpinPage(page_id_temp, false);
   }
-  // Scenario: We should be able to fetch the data we wrote a while ago.
+  // LOG_INFO("-------------------------------");
+  //  Scenario: We should be able to fetch the data we wrote a while ago.
   page0 = bpm->FetchPage(0);
+  // LOG_INFO("-------------------------------");
   EXPECT_EQ(0, memcmp(page0->GetData(), random_binary_data, PAGE_SIZE));
   EXPECT_EQ(true, bpm->UnpinPage(0, true));
 
@@ -141,7 +147,7 @@ TEST(BufferPoolManagerInstanceTest, SampleTest) {
   delete disk_manager;
 }
 
-TEST(BufferPoolManagerInstanceTest, DISABLED_NewPage) {
+TEST(BufferPoolManagerInstanceTest, NewPage) {
   page_id_t temp_page_id;
   DiskManager *disk_manager = new DiskManager("test.db");
   auto *bpm = new BufferPoolManagerInstance(10, disk_manager);
@@ -203,7 +209,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_NewPage) {
   delete disk_manager;
 }
 
-TEST(BufferPoolManagerInstanceTest, DISABLED_UnpinPage) {
+TEST(BufferPoolManagerInstanceTest, UnpinPage) {
   DiskManager *disk_manager = new DiskManager("test.db");
   auto bpm = new BufferPoolManagerInstance(2, disk_manager);
 
@@ -247,6 +253,8 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_UnpinPage) {
 
   page = bpm->FetchPage(pageid0);
   EXPECT_EQ(0, strcmp(page->GetData(), "page0"));
+  // LOG_INFO("Data:%s.Sizeof:%lu.Strlen:%zu.", page->GetData(), sizeof(page->GetData()), strlen(page->GetData()));
+  // LOG_INFO("Data:%s.Sizeof:%lu.Strlen:%zu.", "page0", sizeof("page0"), strlen("page0"));
   strcpy(page->GetData(), "page0updated");  // NOLINT
 
   page = bpm->FetchPage(pageid1);
@@ -365,7 +373,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_FetchPage) {
   delete disk_manager;
 }
 
-TEST(BufferPoolManagerInstanceTest, DISABLED_DeletePage) {
+/*TEST(BufferPoolManagerInstanceTest, DISABLED_DeletePage) {
   page_id_t temp_page_id;
   DiskManager *disk_manager = new DiskManager("test.db");
   auto bpm = new BufferPoolManagerInstance(10, disk_manager);
@@ -972,6 +980,6 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_HardTest_4) {
     remove("test.log");
     delete disk_manager;
   }
-}
+}*/
 
 }  // namespace bustub
