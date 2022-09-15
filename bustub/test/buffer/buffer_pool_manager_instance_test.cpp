@@ -22,7 +22,7 @@ namespace bustub {
 // NOLINTNEXTLINE
 // Check whether pages containing terminal characters can be recovered
 
-TEST(BufferPoolManagerInstanceTest, BinaryDataTest) {
+TEST(BufferPoolManagerInstanceTest, DISABLED_BinaryDataTest) {
   const std::string db_name = "test.db";
   const size_t buffer_pool_size = 10;
 
@@ -63,8 +63,8 @@ TEST(BufferPoolManagerInstanceTest, BinaryDataTest) {
   for (size_t i = buffer_pool_size; i < buffer_pool_size * 2; ++i) {
     EXPECT_EQ(nullptr, bpm->NewPage(&page_id_temp));
   }
-  // LOG_INFO("-------------------------------");
-  //  Scenario: After unpinning pages {0, 1, 2, 3, 4} we should be able to create 5 new pages
+  // LOG_INFO("1-------------------------------");
+  //   Scenario: After unpinning pages {0, 1, 2, 3, 4} we should be able to create 5 new pages
   for (int i = 0; i < 5; ++i) {
     EXPECT_EQ(true, bpm->UnpinPage(i, true));
     bpm->FlushPage(i);
@@ -76,8 +76,8 @@ TEST(BufferPoolManagerInstanceTest, BinaryDataTest) {
     EXPECT_NE(nullptr, bpm->NewPage(&page_id_temp));
     bpm->UnpinPage(page_id_temp, false);
   }
-  // LOG_INFO("-------------------------------");
-  //  Scenario: We should be able to fetch the data we wrote a while ago.
+  // LOG_INFO("2-------------------------------");
+  //   Scenario: We should be able to fetch the data we wrote a while ago.
   page0 = bpm->FetchPage(0);
   // LOG_INFO("-------------------------------");
   EXPECT_EQ(0, memcmp(page0->GetData(), random_binary_data, PAGE_SIZE));
@@ -92,7 +92,7 @@ TEST(BufferPoolManagerInstanceTest, BinaryDataTest) {
 }
 
 // NOLINTNEXTLINE
-TEST(BufferPoolManagerInstanceTest, SampleTest) {
+TEST(BufferPoolManagerInstanceTest, DISABLED_SampleTest) {
   const std::string db_name = "test.db";
   const size_t buffer_pool_size = 10;
 
@@ -147,7 +147,7 @@ TEST(BufferPoolManagerInstanceTest, SampleTest) {
   delete disk_manager;
 }
 
-TEST(BufferPoolManagerInstanceTest, NewPage) {
+TEST(BufferPoolManagerInstanceTest, DISABLED_NewPage) {
   page_id_t temp_page_id;
   DiskManager *disk_manager = new DiskManager("test.db");
   auto *bpm = new BufferPoolManagerInstance(10, disk_manager);
@@ -209,7 +209,7 @@ TEST(BufferPoolManagerInstanceTest, NewPage) {
   delete disk_manager;
 }
 
-TEST(BufferPoolManagerInstanceTest, UnpinPage) {
+TEST(BufferPoolManagerInstanceTest, DISABLED_UnpinPage) {
   DiskManager *disk_manager = new DiskManager("test.db");
   auto bpm = new BufferPoolManagerInstance(2, disk_manager);
 
@@ -232,7 +232,7 @@ TEST(BufferPoolManagerInstanceTest, UnpinPage) {
     ASSERT_NE(nullptr, new_page);
     bpm->UnpinPage(temp_page_id, true);
   }
-
+  LOG_INFO("1----------------");
   auto page = bpm->FetchPage(pageid0);
   EXPECT_EQ(0, strcmp(page->GetData(), "page0"));
   strcpy(page->GetData(), "page0updated");  // NOLINT
@@ -240,7 +240,7 @@ TEST(BufferPoolManagerInstanceTest, UnpinPage) {
   page = bpm->FetchPage(pageid1);
   EXPECT_EQ(0, strcmp(page->GetData(), "page1"));
   strcpy(page->GetData(), "page1updated");  // NOLINT
-
+  LOG_INFO("2----------------");
   EXPECT_EQ(1, bpm->UnpinPage(pageid0, false));
   EXPECT_EQ(1, bpm->UnpinPage(pageid1, true));
 
@@ -250,11 +250,11 @@ TEST(BufferPoolManagerInstanceTest, UnpinPage) {
     ASSERT_NE(nullptr, new_page);
     bpm->UnpinPage(temp_page_id, true);
   }
-
+  LOG_INFO("3----------------");
   page = bpm->FetchPage(pageid0);
   EXPECT_EQ(0, strcmp(page->GetData(), "page0"));
-  // LOG_INFO("Data:%s.Sizeof:%lu.Strlen:%zu.", page->GetData(), sizeof(page->GetData()), strlen(page->GetData()));
-  // LOG_INFO("Data:%s.Sizeof:%lu.Strlen:%zu.", "page0", sizeof("page0"), strlen("page0"));
+  LOG_INFO("Data:%s.Sizeof:%lu.Strlen:%zu.", page->GetData(), sizeof(page->GetData()), strlen(page->GetData()));
+  LOG_INFO("Data:%s.Sizeof:%lu.Strlen:%zu.", "page0", sizeof("page0"), strlen("page0"));
   strcpy(page->GetData(), "page0updated");  // NOLINT
 
   page = bpm->FetchPage(pageid1);
@@ -288,6 +288,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_FetchPage) {
   for (int i = 0; i < 10; ++i) {
     auto page = bpm->FetchPage(page_ids[i]);
     ASSERT_NE(nullptr, page);
+
     EXPECT_EQ(pages[i], page);
     EXPECT_EQ(0, std::strcmp(std::to_string(i).c_str(), (page->GetData())));
     EXPECT_EQ(1, bpm->UnpinPage(page_ids[i], true));
@@ -373,7 +374,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_FetchPage) {
   delete disk_manager;
 }
 
-/*TEST(BufferPoolManagerInstanceTest, DISABLED_DeletePage) {
+TEST(BufferPoolManagerInstanceTest, DISABLED_DeletePage) {
   page_id_t temp_page_id;
   DiskManager *disk_manager = new DiskManager("test.db");
   auto bpm = new BufferPoolManagerInstance(10, disk_manager);
@@ -498,8 +499,8 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_IsDirty) {
   delete bpm;
   delete disk_manager;
 }
-
-TEST(BufferPoolManagerInstanceTest, DISABLED_ConcurrencyTest) {
+//
+TEST(BufferPoolManagerInstanceTest, ConcurrencyTest) {
   const int num_threads = 5;
   const int num_runs = 50;
   for (int run = 0; run < num_runs; run++) {
@@ -507,7 +508,7 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_ConcurrencyTest) {
     std::shared_ptr<BufferPoolManagerInstance> bpm{new BufferPoolManagerInstance(50, disk_manager)};
     std::vector<std::thread> threads;
 
-    for (int tid = 0; tid < num_threads; tid++) {
+    for (int tid = 0; tid < n um_threads; tid++) {
       threads.push_back(std::thread([&bpm]() {  // NOLINT
         page_id_t temp_page_id;
         std::vector<page_id_t> page_ids;
@@ -980,6 +981,6 @@ TEST(BufferPoolManagerInstanceTest, DISABLED_HardTest_4) {
     remove("test.log");
     delete disk_manager;
   }
-}*/
+}
 
 }  // namespace bustub
