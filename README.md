@@ -16,20 +16,20 @@ CMake, Google C++ Style Guide, Unit Testing, etc
 
 ## Gradescope Test File
 Print out the test file to get the whole Gradescope test file!  
-    FILE *out;
-    out = fopen("/autograder/bustub/test/buffer/grading_buffer_pool_manager_instance_test.cpp", "r");  
-    // out = fopen("../test/buffer/buffer_pool_manager_instance_test.cpp", "r");
-    char ch;
-    while ((ch = getc(out)) != EOF) {
-        putchar(ch);
-    }
-    fclose(out);
+    FILE *out;  
+    out = fopen("/autograder/bustub/test/buffer/  grading_buffer_pool_manager_instance_test.cpp", "r");  
+    // out = fopen("../test/buffer/buffer_pool_manager_instance_test.cpp", "r");  
+    char ch;  
+    while ((ch = getc(out)) != EOF) {  
+        putchar(ch);  
+    }  
+    fclose(out);  
 
 Get the path for testing on Gradescope using getcwd().   
-    #include < direct.h >;   (Windows)
-    #include < unistd.h >;   (Linux/Mac)
-    int MAX_PATH = 10000;
-    char buffer[ MAX_PATH ];
+    #include < direct.h >;   (Windows)  
+    #include < unistd.h >;   (Linux/Mac)  
+    int MAX_PATH = 10000;  
+    char buffer[ MAX_PATH ];  
     std::cout << getcwd(buffer, MAX_PATH);  
 
 ## Debug 
@@ -80,7 +80,6 @@ Google C++ Style Guide
 
 ## Project 1
 ![Pr1_Gradescope](bustub/submission/Photo/Project1_GS.png)  
-
 
 Reference: Database-System-Concepts-7th-Edition Ch13.5 Database Buffer  
 
@@ -154,4 +153,4 @@ error: missing username/bug in TODO
   ^~~~~~~~~~~~~~~~~~~~~~~~~~  
   // TODO(unknown): reset its metadata  
 
-![Pr1](bustub/submission/Photo/Project1.png)
+![Pr1](bustub/submission/Photo/Project1.png)  
