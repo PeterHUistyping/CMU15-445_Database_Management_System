@@ -15,3 +15,9 @@
 This repo contains all the DBMS Design Project code in 2022 of CS15-445.
 
 [Project](/Doc/Project.md)
+
+- *Database Management System Design, CMU 15-445*  
+  - Memory Management (Disk) 
+    - LRU Replacer
+    - Buffer Pool Manager
+  
