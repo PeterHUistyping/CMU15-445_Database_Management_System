@@ -20,4 +20,6 @@ This repo contains all the DBMS Design Project code in 2022 of CS15-445.
   - Memory Management (Disk) 
     - LRU Replacer
     - Buffer Pool Manager
-  
+
+## Computer System Knowledge Sharing
+See more about Machine Learning and Data Science in general. [Computer_System_Guidance_Repo](https://github.com/PeterHUistyping/Computer_System_Guidance) 
