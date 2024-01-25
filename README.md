@@ -21,20 +21,13 @@ Database Management System Project (C++)
     - Durability & Recovery: Logging, Checkpoints
 - Parallel architectures (multi-core, distributed)
 
-## Environment, Tools, Submission, Debug, etc
-
-[CI_WORKFLOW](./CI_WORKFLOW.md)
-
 ## Project bustub
 
-This repo contains all the DBMS Design Project code in 2022 of CS15-445.
+DBMS Design Project for CMU15-445 2022.
+
+Setup, Submission, Debug  [CI_WORKFLOW](./CI_WORKFLOW.md)
 
 [Project-Details](/Doc/Project.md)
-
-- *Database Management System Design, CMU 15-445*
-  - Memory Management (Disk)
-    - LRU Replacer
-    - Buffer Pool Manager
 
 ## Computer System Knowledge Sharing
 
